@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylish Language App Login</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        :root {
+            --primary-color: #6a82fb;
+            --secondary-color: #fc5c7d;
+            --text-color: #333;
+            --light-text-color: #666;
+            --white: #ffffff;
+            --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --border-radius: 10px;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-color);
+            overflow: hidden; /* Hide any overflow from decorations */
+        }
+
+        .container {
+            background-color: var(--white);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-light);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            z-index: 1; /* Ensure container is above decorations */
+            animation: fadeInScale 0.6s ease-out forwards;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-weight: 600;
+            font-size: 1.8em;
+            line-height: 1.3;
+        }
+
+        p {
+            color: var(--light-text-color);
+            margin-bottom: 30px;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        #welcome-message {
+            font-size: 1.2em;
+            font-weight: 400;
+            color: var(--text-color);
+            margin-top: 15px;
+            margin-bottom: 25px;
+            padding: 10px;
+            background-color: #e6f7ff; /* Light blue background for message */
+            border-radius: 5px;
+            display: none;
+        }
+
+        #user-name {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .g_id_signin {
+            margin-top: 25px; /* Adjust spacing below welcome message */
+            margin-bottom: 20px;
+            display: flex; /* Make the button centered */
+            justify-content: center; /* Center the button */
+        }
+
+        /* Styling for the sign-out button */
+        #sign-out-button {
+            background-color: #dc3545; /* Red color for sign-out */
+            color: var(--white);
+            border: none;
+            padding: 12px 25px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        #sign-out-button:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* --- Decorative Elements (Optional but adds flair) --- */
+        .decoration-circle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            pointer-events: none;
+            opacity: 0.8;
+            animation: float 10s ease-in-out infinite alternate;
+        }
+
+        .decoration-circle.large {
+            width: 250px;
+            height: 250px;
+            top: -50px;
+            left: -50px;
+            animation-duration: 12s;
+        }
+
+        .decoration-circle.medium {
+            width: 150px;
+            height: 150px;
+            bottom: -70px;
+            right: -70px;
+            animation-duration: 9s;
+            animation-delay: 1s;
+        }
+
+        .decoration-circle.small {
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            left: 5%;
+            animation-duration: 7s;
+            opacity: 0.6;
+            animation-delay: 2s;
+        }
+
+        /* Keyframe Animations */
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(-20px) translateX(10px); }
+            100% { transform: translateY(0px) translateX(0px); }
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .decoration-circle.large {
+                width: 180px;
+                height: 180px;
+            }
+            .decoration-circle.medium {
+                width: 100px;
+                height: 100px;
+            }
+            .decoration-circle.small {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration-circle large"></div>
+    <div class="decoration-circle medium"></div>
+    <div class="decoration-circle small"></div>
+
+    <div class="container">
+        <h1>Unlock New Languages!</h1>
+        <p>Sign in to connect with language partners and start your conversation journey.</p>
+
+        <p id="welcome-message" style="display: none;">Namaste, <span id="user-name"></span>! Let's talk!</p>
+
+        <div id="g_id_onload"
+             data-client_id="YOUR_GOOGLE_CLIENT_ID"
+             data-context="signin"
+             data-ux_mode="popup"
+             data-callback="handleCredentialResponse"
+             data-auto_prompt="false">
+        </div>
+
+        <div class="g_id_signin"
+             data-type="standard"
+             data-shape="rectangular"
+             data-theme="outline"
+             data-text="signin_with"
+             data-size="large"
+             data-logo_alignment="left">
+        </div>
+
+        <button id="sign-out-button" style="display: none;">Sign Out</button>
+    </div>
+
+    <script type="module">
+        // --- Firebase Configuration and SDK Imports ---
+        // Your web app's Firebase configuration (COPY THIS EXACTLY FROM FIREBASE CONSOLE)
+        const firebaseConfig = {
+          apiKey: "YOUR_API_KEY",
+          authDomain: "YOUR_AUTH_DOMAIN",
+          projectId: "YOUR_PROJECT_ID",
+          storageBucket: "YOUR_STORAGE_BUCKET",
+          messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+          appId: "YOUR_APP_ID"
+        };
+
+        // Initialize Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"; // Adjust version if needed
+        const app = initializeApp(firebaseConfig);
+
+        // Import Firebase Auth functions
+        import { getAuth, GoogleAuthProvider, signInWithCredential, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"; // Adjust version if needed
+        const auth = getAuth(app);
+
+        // --- Google Identity Services Callback ---
+        // This function is called by the Google Identity Services library when a user signs in
+        window.handleCredentialResponse = async (response) => {
+            console.log("Encoded JWT ID token: " + response.credential);
+
+            // Build Firebase credential with the Google ID token
+            const credential = GoogleAuthProvider.credential(response.credential);
+
+            try {
+                // Sign in with credential from the Google user using Firebase Auth
+                await signInWithCredential(auth, credential);
+                console.log("User signed in successfully with Firebase!");
+                // UI will automatically update via the onAuthStateChanged listener below
+            } catch (error) {
+                console.error("Error signing in with Firebase:", error);
+                // Display error message to user if needed
+            }
+        };
+
+        // --- UI Elements and Event Listeners ---
+        const googleSignInButtonContainer = document.querySelector('.g_id_signin');
+        const signOutButton = document.getElementById('sign-out-button');
+        const welcomeMessage = document.getElementById('welcome-message');
+        const userNameSpan = document.getElementById('user-name');
+
+        // Firebase Auth State Listener (updates UI when login/logout happens)
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                console.log("User is signed in:", user.displayName, user.email);
+                googleSignInButtonContainer.style.display = 'none'; // Hide Google button
+                signOutButton.style.display = 'block';     // Show sign out button
+                welcomeMessage.style.display = 'block';    // Show welcome message
+                userNameSpan.textContent = user.displayName || user.email; // Display user's name
+            } else {
+                // User is signed out
+                console.log("User is signed out.");
+                googleSignInButtonContainer.style.display = 'block'; // Show Google button
+                signOutButton.style.display = 'none';     // Hide sign out button
+                welcomeMessage.style.display = 'none';    // Hide welcome message
+                userNameSpan.textContent = '';
+            }
+        });
+
+        // Sign out button click handler
+        signOutButton.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                console.log("User signed out successfully.");
+                // UI will automatically update via the onAuthStateChanged listener above
+            } catch (error) {
+                console.error("Error signing out:", error);
+            }
+        });
+    </script>
+</body>
+</html>
